@@ -1,18 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dactuall <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/15 09:58:25 by dactuall          #+#    #+#             */
+/*   Updated: 2021/11/15 15:13:21 by dactuall         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# include <unistd.h>
 # include <stdlib.h>
-# include <fcntl.h>
-# include <stdio.h>
-#define BUFF_SIZE 35
+# include <unistd.h>
 
-int	get_next_line(int	fd, char	**line);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strnew(size_t size);
-char	*ft_strchr(const char *s, int	c);
-size_t	ft_strlen(const char	*s);
-char	*ft_strdup(char	*src);
-char	*ft_strcpy(char	*dst, char	*src);
-void	ft_strclr(char	*s);
-
+char	*get_next_line(int fd);
+size_t	ft_strlen(char *s);
+char	*ft_strdup(char	*s);
+char	*ft_memcpy(char	*dest, char *src, size_t len);
+char	*ft_strjoin(char *s1, char *s2);
+int		init(char	**buff, char	**line);
+char	*logic(char	**buff, char *line, int fd);
+char	*ft_strchr(const char *str, int	c);
+int		not_buff(char	**line);
+char	*name(char *s);
 #endif

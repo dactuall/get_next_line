@@ -1,60 +1,102 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dactuall <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/15 09:58:33 by dactuall          #+#    #+#             */
+/*   Updated: 2021/11/15 15:27:23 by dactuall         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-char	*check_remainder(char	*remainder, char	**line)
+char	*get_next_line(int fd)
+{
+	static char	*buff[256];
+	char		*line;
+	int			check;
+
+	line = NULL;
+	if (read(fd, line, 0) < 0 || BUFFER_SIZE < 1)
+		return (NULL);
+	check = init(&buff[fd], &line);
+	if (!check)
+		return (NULL);
+	line = logic(&buff[fd], line, fd);
+	if (!line)
+		return (NULL);
+	return (line);
+}
+
+int	init(char	**buff, char	**line)
 {
 	char	*p_n;
+	char	*tmp_buff;
 
-	p_n = NULL;
-	if (remainder)
+	if (*buff)
 	{
-		if ((p_n = ft_strchr(remainder, '\n')))
+		p_n = ft_strchr(*buff, '\n');
+		if (p_n)
 		{
-			*p_n = '\0';
-			*line = ft_strdup(remainder);
-			ft_strcpy(remainder, ++p_n);
+			tmp_buff = ft_strdup(p_n + 1);
+			*(p_n + 1) = '\0';
+			*line = ft_strdup(*buff);
+			free(*buff);
+			*buff = tmp_buff;
 		}
 		else
 		{
-			*line = ft_strdup(remainder);
-			ft_strclr(remainder);
+			*line = *buff;
+			*buff = NULL;
 		}
 	}
 	else
-		*line = ft_strnew(1);
-	return (p_n);
+		return (not_buff(line));
+	return (1);
 }
 
-int	get_next_line(int	fd, char	**line)
+char	*logic(char	**buff, char *line, int fd)
 {
-	char		buf[BUFF_SIZE + 1];
-	int		byte_was_read;
-	char		*p_n;
-	static char	*remainder;
-	char		*tmp;
+	int		rd;
+	char	read_buff[BUFFER_SIZE + 1];
+	char	*p_n;
+	char	*temp;
 
-	p_n = check_remainder(remainder, line);
-	while (!p_n && (byte_was_read = read(fd, buf, BUFF_SIZE)))
+	rd = 1;
+	while (!ft_strchr(line, '\n') && rd != 0)
 	{
-		buf[byte_was_read] = '\0';
-		if ((p_n = ft_strchr(buf, '\n')))
+		rd = (read(fd, read_buff, BUFFER_SIZE));
+		if (rd == 0 && *line == '\0')
+			return (name(line));
+		if (rd == -1)
+			return (name(*buff));
+		read_buff[rd] = '\0';
+		p_n = ft_strchr(read_buff, '\n');
+		if (p_n)
 		{
-			*p_n = '\n';
-			p_n++;
-			remainder = ft_strdup(p_n);
+			*buff = ft_strdup(p_n + 1);
+			*(p_n + 1) = '\0';
 		}
-		tmp = *line;
-		*line = ft_strjoin(*line, buf);
-		free(tmp);
+		temp = line;
+		line = ft_strjoin(line, read_buff);
+		free(temp);
 	}
-	return (byte_was_read || ft_strlen(remainder)) ? 1 : 0;
+	return (line);
 }
 
-int	main(void)
+int	not_buff(char	**line)
 {
-	char	*line;
-	int	fd;
+	*line = malloc(sizeof(char));
+	if (!*line)
+		return (0);
+	**line = '\0';
+	return (1);
+}
 
-	fd = open("text.txt", O_RDONLY);
-	while (get_next_line(fd, &line))
-		printf("%s\n\n", line);
+char	*name(char *s)
+{
+	free(s);
+	return (NULL);
 }
