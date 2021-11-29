@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dactuall <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/24 16:01:16 by dactuall          #+#    #+#             */
-/*   Updated: 2021/11/29 19:02:00 by dactuall         ###   ########.fr       */
+/*   Created: 2021/11/29 18:43:01 by dactuall          #+#    #+#             */
+/*   Updated: 2021/11/29 18:53:11 by dactuall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*get_next_line(int fd)
 {
-	static char	*rem;
+	static char	*rem[256];
 	char		*buff;
 	int			read_byte;
 
-	if (fd < 0 || BUFFER_SIZE < 1)
+	buff = NULL;
+	if ((read(fd, buff, 0) < 0) || BUFFER_SIZE < 1)
 		return (NULL);
 	buff = malloc(BUFFER_SIZE + 1);
 	if (!buff)
@@ -27,7 +28,7 @@ char	*get_next_line(int fd)
 	while (read_byte > 0)
 	{
 		buff[read_byte] = '\0';
-		rem = save(buff, rem);
+		rem[fd] = save(buff, rem[fd]);
 		if (ft_strchr(buff, '\n'))
 			break ;
 		read_byte = read(fd, buff, BUFFER_SIZE);
@@ -35,7 +36,7 @@ char	*get_next_line(int fd)
 			return (NULL);
 	}
 	free(buff);
-	return (create_rem(&rem));
+	return (create_rem(&rem[fd]));
 }
 
 char	*save(char	*buff, char	*rem)

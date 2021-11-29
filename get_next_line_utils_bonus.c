@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dactuall <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/24 16:01:40 by dactuall          #+#    #+#             */
-/*   Updated: 2021/11/29 19:05:36 by dactuall         ###   ########.fr       */
+/*   Created: 2021/11/29 18:43:15 by dactuall          #+#    #+#             */
+/*   Updated: 2021/11/29 19:06:02 by dactuall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char	*s)
 {
